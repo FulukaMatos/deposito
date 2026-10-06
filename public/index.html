@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Depósito</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="app">
+
+        <header class="cabecalho">
+            <div class="logo">DEPÓSITO</div>
+            <div class="subtitulo">Assistente de consulta</div>
+        </header>
+
+        <section class="chat">
+
+            <div class="mensagem bot">
+                Olá! 👋<br>
+                Como posso ajudar?
+            </div>
+
+            <div id="resultado"></div>
+
+        </section>
+
+        <section class="entrada">
+
+            <input
+                type="text"
+                id="campoBusca"
+                placeholder="Digite o código ou nome do produto..."
+                autocomplete="off"
+            >
+
+            <button id="botaoEnviar">Enviar</button>
+
+            <button id="botaoVoz" title="Pesquisa por voz">
+                🎤
+            </button>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

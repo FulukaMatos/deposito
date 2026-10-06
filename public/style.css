@@ -1,0 +1,87 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f5f7;
+    color: #222;
+}
+
+.app {
+    width: 100%;
+    max-width: 900px;
+    height: 100vh;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+.cabecalho {
+    padding: 24px;
+    background: #123b5d;
+    color: white;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.subtitulo {
+    margin-top: 5px;
+    opacity: 0.8;
+}
+
+.chat {
+    flex: 1;
+    padding: 25px;
+    overflow-y: auto;
+}
+
+.mensagem {
+    max-width: 75%;
+    padding: 14px 18px;
+    margin-bottom: 15px;
+    border-radius: 14px;
+    line-height: 1.5;
+}
+
+.bot {
+    background: #eef2f5;
+}
+
+.entrada {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+}
+
+#campoBusca {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 0 18px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#botaoEnviar {
+    background: #123b5d;
+    color: white;
+}
+
+#botaoVoz {
+    background: #e8edf1;
+}
