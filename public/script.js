@@ -1,29 +1,98 @@
 const campoBusca = document.getElementById("campoBusca");
 const botaoEnviar = document.getElementById("botaoEnviar");
+const botaoVoz = document.getElementById("botaoVoz");
 const resultado = document.getElementById("resultado");
 
-// Guarda os produtos carregados do Neon
+// Produtos carregados do Neon
 let produtos = [];
 
-// Carrega os produtos do banco
+// ========================================
+// NORMALIZA TEXTO
+// ========================================
+function normalizar(texto) {
+    return String(texto || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+}
+
+// ========================================
+// PROTEÇÃO DO HTML
+// ========================================
+function escaparHTML(texto) {
+    return String(texto ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// ========================================
+// CARREGA PRODUTOS DO SERVIDOR
+// ========================================
 async function carregarProdutos() {
+
     try {
+
         const resposta = await fetch("/api/produtos");
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP ${resposta.status}`);
+        }
+
         const dados = await resposta.json();
 
         if (dados.sucesso) {
-            produtos = dados.produtos;
-            console.log("Produtos carregados:", produtos.length);
+
+            produtos = dados.produtos || [];
+
+            console.log(
+                "Produtos carregados:",
+                produtos.length
+            );
+
         } else {
-            console.error("Erro ao carregar produtos.");
+
+            console.error(
+                "Erro ao carregar produtos."
+            );
         }
 
     } catch (erro) {
-        console.error("Erro de conexão:", erro);
+
+        console.error(
+            "Erro de conexão:",
+            erro
+        );
     }
 }
 
-// Faz a pesquisa
+// ========================================
+// RESPOSTA POR VOZ
+// ========================================
+function falar(texto) {
+
+    if (!("speechSynthesis" in window)) {
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const fala =
+        new SpeechSynthesisUtterance(texto);
+
+    fala.lang = "pt-BR";
+    fala.rate = 1;
+    fala.pitch = 1;
+
+    window.speechSynthesis.speak(fala);
+}
+
+// ========================================
+// PESQUISA
+// ========================================
 function pesquisar() {
 
     const texto = campoBusca.value.trim();
@@ -32,62 +101,247 @@ function pesquisar() {
         return;
     }
 
-    const busca = texto.toLowerCase();
+    const busca = normalizar(texto);
 
-    // Procura pelo código ou pela descrição
-    const encontrados = produtos.filter(produto => {
+    // ====================================
+    // PRIMEIRO: PROCURA PELO CÓDIGO EXATO
+    // ====================================
 
-        const codigo = String(produto.codigo);
+    let encontrados = produtos.filter(produto => {
 
-        const descricao = produto.descricao.toLowerCase();
+        const codigo =
+            normalizar(produto.codigo);
 
-        return codigo === texto || descricao.includes(busca);
+        return codigo === busca;
     });
 
-    // Nenhum produto encontrado
+    // ====================================
+    // SEGUNDO: BUSCA FLEXÍVEL
+    // ====================================
+
+    if (encontrados.length === 0) {
+
+        const palavras =
+            busca
+                .split(/\s+/)
+                .filter(palavra => palavra.length > 0);
+
+        encontrados = produtos.filter(produto => {
+
+            const descricao =
+                normalizar(produto.descricao);
+
+            // Todas as palavras precisam
+            // aparecer na descrição.
+            return palavras.every(palavra =>
+                descricao.includes(palavra)
+            );
+        });
+    }
+
+    // ====================================
+    // NENHUM RESULTADO
+    // ====================================
+
     if (encontrados.length === 0) {
 
         resultado.innerHTML = `
             <div class="mensagem bot">
                 Não encontrei nenhum produto para:
-                <strong>${texto}</strong>
+                <strong>${escaparHTML(texto)}</strong>
             </div>
         `;
 
+        falar(
+            `Não encontrei nenhum produto para ${texto}.`
+        );
+
         campoBusca.value = "";
+
         return;
     }
 
-    // Mostra os produtos encontrados
-    resultado.innerHTML = encontrados.map(produto => `
+    // ====================================
+    // MOSTRA OS RESULTADOS
+    // ====================================
+
+    resultado.innerHTML =
+        encontrados.map(produto => `
+
         <div class="mensagem bot produto">
 
-            <strong>${produto.descricao}</strong>
+            <strong>
+                ${escaparHTML(produto.descricao)}
+            </strong>
 
             <br><br>
 
-            <strong>Código:</strong> ${produto.codigo}<br>
-            <strong>Caixa:</strong> ${produto.caixa}<br>
-            <strong>Lastro:</strong> ${produto.lastro}<br>
-            <strong>Palete:</strong> ${produto.palete}
+            <strong>Código:</strong>
+            ${escaparHTML(produto.codigo)}
+
+            <br>
+
+            <strong>Caixa:</strong>
+            ${escaparHTML(produto.caixa)}
+
+            <br>
+
+            <strong>Lastro:</strong>
+            ${escaparHTML(produto.lastro)}
+
+            <br>
+
+            <strong>Palete:</strong>
+            ${escaparHTML(produto.palete)}
 
         </div>
+
     `).join("");
+
+    // ====================================
+    // RESPOSTA POR VOZ
+    // ====================================
+
+    if (encontrados.length === 1) {
+
+        const produto = encontrados[0];
+
+        const mensagem =
+            `${produto.descricao}. ` +
+            `Código ${produto.codigo}. ` +
+            `Caixa ${produto.caixa}. ` +
+            `Lastro ${produto.lastro}. ` +
+            `Palete ${produto.palete}.`;
+
+        falar(mensagem);
+
+    } else {
+
+        falar(
+            `Encontrei ${encontrados.length} produtos para ${texto}.`
+        );
+    }
 
     campoBusca.value = "";
 }
 
-// Botão Enviar
-botaoEnviar.addEventListener("click", pesquisar);
+// ========================================
+// BOTÃO ENVIAR
+// ========================================
+botaoEnviar.addEventListener(
+    "click",
+    pesquisar
+);
 
-// Tecla Enter
-campoBusca.addEventListener("keydown", function(event) {
+// ========================================
+// TECLA ENTER
+// ========================================
+campoBusca.addEventListener(
+    "keydown",
+    function(event) {
 
-    if (event.key === "Enter") {
-        pesquisar();
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            pesquisar();
+        }
     }
+);
 
-});
+// ========================================
+// RECONHECIMENTO DE VOZ
+// ========================================
 
-// Carrega os produtos quando a página abre
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+let reconhecimento = null;
+
+if (SpeechRecognition) {
+
+    reconhecimento =
+        new SpeechRecognition();
+
+    reconhecimento.lang = "pt-BR";
+
+    reconhecimento.continuous = false;
+
+    reconhecimento.interimResults = false;
+
+    reconhecimento.onstart = function() {
+
+        botaoVoz.textContent = "🔴";
+
+        botaoVoz.title =
+            "Ouvindo...";
+    };
+
+    reconhecimento.onresult = function(event) {
+
+        const textoFalado =
+            event.results[0][0].transcript;
+
+        console.log(
+            "Voz reconhecida:",
+            textoFalado
+        );
+
+        campoBusca.value =
+            textoFalado;
+
+        pesquisar();
+    };
+
+    reconhecimento.onerror = function(event) {
+
+        console.error(
+            "Erro no reconhecimento de voz:",
+            event.error
+        );
+
+        botaoVoz.textContent = "🎤";
+
+        botaoVoz.title =
+            "Pesquisa por voz";
+    };
+
+    reconhecimento.onend = function() {
+
+        botaoVoz.textContent = "🎤";
+
+        botaoVoz.title =
+            "Pesquisa por voz";
+    };
+
+    botaoVoz.addEventListener(
+        "click",
+        function() {
+
+            try {
+
+                reconhecimento.start();
+
+            } catch (erro) {
+
+                console.log(
+                    "Reconhecimento já iniciado."
+                );
+            }
+        }
+    );
+
+} else {
+
+    console.warn(
+        "Reconhecimento de voz não suportado neste navegador."
+    );
+
+    botaoVoz.disabled = true;
+}
+
+// ========================================
+// INICIA O SISTEMA
+// ========================================
 carregarProdutos();
