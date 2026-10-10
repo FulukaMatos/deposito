@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -18,6 +19,8 @@
             <div class="subtitulo">Assistente de consulta</div>
         </header>
 
+        <!-- ÁREA DE CONSULTA -->
+
         <section class="chat">
 
             <div class="mensagem bot">
@@ -29,6 +32,8 @@
 
         </section>
 
+        <!-- CAMPO DE BUSCA -->
+
         <section class="entrada">
 
             <input
@@ -38,11 +43,192 @@
                 autocomplete="off"
             >
 
-            <button id="botaoEnviar">Enviar</button>
+            <button id="botaoEnviar" type="button">
+                Enviar
+            </button>
 
-            <button id="botaoVoz" title="Pesquisa por voz">
+            <button
+                id="botaoVoz"
+                type="button"
+                title="Pesquisa por voz"
+            >
                 🎤
             </button>
+
+        </section>
+
+        <!-- BOTÃO DE CADASTRO -->
+
+        <section class="area-botao-cadastro">
+
+            <button
+                id="botaoCadastrar"
+                type="button"
+            >
+                + Cadastrar produto
+            </button>
+
+        </section>
+
+        <!-- ETAPA 1: SOLICITAÇÃO DA SENHA -->
+
+        <section
+            id="areaSenhaCadastro"
+            class="area-cadastro"
+            hidden
+        >
+
+            <h2>Acesso ao cadastro</h2>
+
+            <p>
+                Digite a senha para cadastrar um novo produto.
+            </p>
+
+            <form id="formularioSenha">
+
+                <label for="campoSenhaCadastro">
+                    Senha de acesso
+                </label>
+
+                <input
+                    type="password"
+                    id="campoSenhaCadastro"
+                    placeholder="Digite a senha"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <div class="acoes-cadastro">
+
+                    <button type="submit" id="botaoValidarSenha">
+                        Continuar
+                    </button>
+
+                    <button
+                        type="button"
+                        id="botaoCancelarSenha"
+                    >
+                        Cancelar
+                    </button>
+
+                </div>
+
+                <p
+                    id="mensagemSenha"
+                    role="status"
+                    aria-live="polite"
+                ></p>
+
+            </form>
+
+        </section>
+
+        <!-- ETAPA 2: FORMULÁRIO DE CADASTRO -->
+
+        <section
+            id="areaFormularioCadastro"
+            class="area-cadastro"
+            hidden
+        >
+
+            <h2>Cadastrar produto</h2>
+
+            <p>
+                Preencha as informações do produto.
+            </p>
+
+            <form id="formularioCadastro">
+
+                <label for="cadastroDescricao">
+                    Descrição do produto
+                </label>
+
+                <input
+                    type="text"
+                    id="cadastroDescricao"
+                    name="descricao"
+                    placeholder="Ex.: GUARANÁ BARÉ PET 2L"
+                    maxlength="500"
+                    required
+                >
+
+                <label for="cadastroCodigo">
+                    Código do produto
+                </label>
+
+                <input
+                    type="number"
+                    id="cadastroCodigo"
+                    name="codigo"
+                    placeholder="Digite o código"
+                    step="1"
+                    required
+                >
+
+                <label for="cadastroCaixa">
+                    Caixa (unidades por caixa)
+                </label>
+
+                <input
+                    type="number"
+                    id="cadastroCaixa"
+                    name="caixa"
+                    placeholder="Ex.: 12"
+                    min="0"
+                    step="1"
+                >
+
+                <label for="cadastroLastro">
+                    Lastro (caixas por lastro)
+                </label>
+
+                <input
+                    type="number"
+                    id="cadastroLastro"
+                    name="lastro"
+                    placeholder="Ex.: 24"
+                    min="0"
+                    step="1"
+                >
+
+                <label for="cadastroPalete">
+                    Palete (caixas por palete)
+                </label>
+
+                <input
+                    type="number"
+                    id="cadastroPalete"
+                    name="palete"
+                    placeholder="Ex.: 180"
+                    min="0"
+                    step="1"
+                >
+
+                <div class="acoes-cadastro">
+
+                    <button
+                        type="submit"
+                        id="botaoSalvarProduto"
+                    >
+                        Salvar produto
+                    </button>
+
+                    <button
+                        type="button"
+                        id="botaoCancelarCadastro"
+                    >
+                        Cancelar
+                    </button>
+
+                </div>
+
+                <p
+                    id="mensagemCadastro"
+                    role="status"
+                    aria-live="polite"
+                ></p>
+
+            </form>
 
         </section>
 
