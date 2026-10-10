@@ -1,3 +1,4 @@
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,20 +11,27 @@ body {
     color: #222;
 }
 
+/* ========================================
+   ESTRUTURA PRINCIPAL
+======================================== */
+
 .app {
     width: 100%;
     max-width: 900px;
     height: 100vh;
+    height: 100dvh;
     margin: auto;
     display: flex;
     flex-direction: column;
     background: white;
+    overflow: hidden;
 }
 
 .cabecalho {
     padding: 24px;
     background: #123b5d;
     color: white;
+    flex-shrink: 0;
 }
 
 .logo {
@@ -36,8 +44,13 @@ body {
     opacity: 0.8;
 }
 
+/* ========================================
+   ÁREA DA CONVERSA
+======================================== */
+
 .chat {
     flex: 1;
+    min-height: 0;
     padding: 25px;
     overflow-y: auto;
 }
@@ -48,21 +61,32 @@ body {
     margin-bottom: 15px;
     border-radius: 14px;
     line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
 .bot {
     background: #eef2f5;
 }
 
+.produto {
+    max-width: 100%;
+}
+
+/* ========================================
+   CAMPO DE BUSCA
+======================================== */
+
 .entrada {
     display: flex;
     gap: 10px;
     padding: 15px;
     border-top: 1px solid #ddd;
+    flex-shrink: 0;
 }
 
 #campoBusca {
     flex: 1;
+    min-width: 0;
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -72,16 +96,260 @@ body {
 button {
     border: none;
     border-radius: 10px;
-    padding: 0 18px;
+    padding: 12px 18px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+button:active {
+    opacity: 0.8;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 #botaoEnviar {
     background: #123b5d;
     color: white;
+    flex-shrink: 0;
 }
 
 #botaoVoz {
     background: #e8edf1;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   BOTÃO CADASTRAR PRODUTO
+======================================== */
+
+.area-botao-cadastro {
+    padding: 10px 15px 18px;
+    flex-shrink: 0;
+}
+
+#botaoCadastrar {
+    width: 100%;
+    min-height: 50px;
+    background: #176b48;
+    color: white;
+    font-size: 17px;
+}
+
+/* ========================================
+   TELAS DE SENHA E CADASTRO
+======================================== */
+
+.area-cadastro {
+    flex-shrink: 0;
+    width: 100%;
+    padding: 24px;
+    border-top: 1px solid #d9e0e5;
+    background: #f8fafc;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+/* Respeita o atributo hidden do HTML */
+[hidden] {
+    display: none !important;
+}
+
+.area-cadastro h2 {
+    color: #123b5d;
+    font-size: 24px;
+    line-height: 1.3;
+    margin-bottom: 10px;
+}
+
+.area-cadastro p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 18px;
+}
+
+.area-cadastro form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.area-cadastro label {
+    display: block;
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.area-cadastro input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 54px;
+    padding: 14px 15px;
+    border: 1px solid #b9c5cf;
+    border-radius: 10px;
+    background: white;
+    color: #222;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+}
+
+.area-cadastro input:focus,
+#campoBusca:focus {
+    outline: 2px solid #377eac;
+    outline-offset: 1px;
+    border-color: #377eac;
+}
+
+.area-cadastro input::placeholder {
+    color: #777;
+    font-size: 16px;
+}
+
+/* ========================================
+   BOTÕES SALVAR E CANCELAR
+======================================== */
+
+.acoes-cadastro {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.acoes-cadastro button {
+    flex: 1;
+    min-width: 0;
+    min-height: 52px;
+    padding: 12px 14px;
+    font-size: 16px;
+}
+
+#botaoValidarSenha,
+#botaoSalvarProduto {
+    background: #123b5d;
+    color: white;
+}
+
+#botaoCancelarSenha,
+#botaoCancelarCadastro {
+    background: #e1e7ec;
+    color: #222;
+}
+
+/* Mensagens de retorno do formulário */
+#mensagemSenha,
+#mensagemCadastro {
+    margin-top: 10px;
+    margin-bottom: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* ========================================
+   AJUSTES PARA CELULARES
+======================================== */
+
+@media (max-width: 600px) {
+
+    .app {
+        max-width: 100%;
+    }
+
+    .cabecalho {
+        padding: 18px 16px;
+    }
+
+    .logo {
+        font-size: 25px;
+    }
+
+    .chat {
+        padding: 16px;
+    }
+
+    .mensagem {
+        max-width: 95%;
+        padding: 14px;
+    }
+
+    .produto {
+        max-width: 100%;
+    }
+
+    .entrada {
+        gap: 7px;
+        padding: 10px;
+    }
+
+    #campoBusca {
+        padding: 13px 10px;
+        font-size: 16px;
+    }
+
+    button {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    #botaoVoz {
+        min-width: 46px;
+        padding: 10px;
+    }
+
+    .area-botao-cadastro {
+        padding: 8px 10px 12px;
+    }
+
+    #botaoCadastrar {
+        min-height: 52px;
+        font-size: 17px;
+    }
+
+    /* Formulário maior e mais confortável */
+    .area-cadastro {
+        padding: 22px 18px;
+        max-height: 78%;
+    }
+
+    .area-cadastro h2 {
+        font-size: 25px;
+        margin-bottom: 12px;
+    }
+
+    .area-cadastro p {
+        font-size: 17px;
+    }
+
+    .area-cadastro label {
+        font-size: 17px;
+        margin-top: 10px;
+    }
+
+    .area-cadastro input {
+        min-height: 58px;
+        padding: 16px 14px;
+        font-size: 18px;
+    }
+
+    .area-cadastro input::placeholder {
+        font-size: 16px;
+    }
+
+    .acoes-cadastro {
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .acoes-cadastro button {
+        min-height: 54px;
+        padding: 12px 10px;
+        font-size: 16px;
+    }
 }
